@@ -1,73 +1,58 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void solve(multiset<int> ms, int n, int k) {
-        int l, r; 
-        int max_l=0;
-        int max_r=0;
-        int c = 0;
-        int max_c = -1;
-        int last_printed = -1;
-        vector<int> arr;
-        bool sol = 0;
-        for (auto x : ms){
-            if ( x == last_printed){
-                continue;
-            }
-            arr.push_back(x);
-            last_printed = x;
-        }
-        last_printed = -1;
-        for (size_t i = 0; i < arr.size(); ++i) {
-            int x = arr[i];
-            if (ms.count(x) >= k && (i == 0 || (x - arr[i - 1] <= 1))) {
-                if (c == 0){
-                    l = x;
-                }
-                r = x;
-                c++;
-                last_printed = x;
-                sol = 1;
-                continue;
-            }
-            else{
-                if (c > max_c){
-                    max_l = l;
-                    max_r = r;
-                    max_c = c;
-                }
-                c = 0;
-            }
-        }
-        if (!sol) {
-            cout << "-1";
-            cout << endl;
-            return;
-        }
-        if (c > max_c){
-            max_l = l;
-            max_r = r;
-        }
-        cout << max_l << " " << max_r;
-        cout << endl;
-    };
-
-int main(){
-    int i;
-    int n,k,a;
-    cin >> i;
-    while (i != 0)
-    {
-        cin >> n;
-        cin >> k;
-        multiset<int> ms;
-        for (int j = 0; j < n; j++) {
-            cin >> a;
-            ms.insert(a);
-        }
-        solve(ms, n, k);
-        i--;
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    int arr[n];
+    map<int, int> mp;
+    
+    for (int i = 0; i < n; i++){
+        cin >> arr[i];
+        mp[arr[i]]++;
     }
 
-    return 0;
+    vector<int> result;
+    for( auto x : mp){
+        if(x.second >= k)
+        {
+            result.push_back(x.first);
+        }
+    }
+    if (result.size() == 0)
+    {
+        cout << -1 << endl;
+        return;
+    }
+
+    sort(result.begin(), result.end());
+    int l, laux, r, c;
+    l = result[0]; 
+    r = result[0];
+    laux = result[0]; 
+    int max = 0;
+
+    for (int j = 1; j < result.size(); j++){
+        if(result[j] == result[j-1] + 1)
+        {
+            if (result[j] - laux > max){
+                max = result[j]-laux;
+                r = result[j];
+                l = laux;
+            }
+        }
+        else{
+            laux = result[j];
+        }
+    }
+    cout << l << " " << r << endl;
+};
+
+int main(){
+    int t;
+	cin >> t;
+	while(t--)
+	{
+		solve();
+	}
 }
