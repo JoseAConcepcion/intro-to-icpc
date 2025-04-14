@@ -3,49 +3,57 @@ using namespace std;
 
 void solve(string a, string b)
 {
-    vector<string> sets_a;
-    vector<string> sets_b;
-    char last;
+    vector<int> sets_a;
+    vector<int> sets_b;
+    int count = 1;
     if (a.length() > b.length() || a[0] != b[0] || a.length() > 2 * b.length())
     {
         cout << "NO" << endl;
         return;
     }
-    last = a[0];
-    for (int i = 0; i < a.length(); i++)
+
+    for (int i = 1; i < a.length(); i++)
     {
-        if (a[i] != b[i])
+        if (a[i] != a[i-1])
         {
-            if (a[i] == last)
-            {
-                cout << "NO" << endl;
-                return;
-            }
-            for (int j = i; j < b.length(); j++)
-            {
-                if(a[i] == b[j])
-                {
-                    if (j>2*i)
-                    {
-                        cout << "NO" << endl;
-                        return;
-                    }
-                    string sub_a = a .substr(i, a.length());
-                    string sub_b = b .substr(j, b.length());
-                    last = sub_a[0];
-                    solve(sub_a, sub_b);
-                    return;
-                }
-            }
+            sets_a.push_back(count);
+            count = 1;
+            continue;
         }
+        count++;
     }
-    if (a.length() < b.length())
+
+    sets_a.push_back(count);
+    count = 1;
+
+    for (int i = 1; i < b.length(); i++)
+    {
+        if (b[i] != b[i-1])
+        {
+            sets_b.push_back(count);
+            count = 1;
+            continue;
+        }
+        count++;
+    }
+
+    sets_b.push_back(count);
+
+    if (sets_a.size() != sets_b.size())
     {
         cout << "NO" << endl;
         return;
     }
+    for (int i = 0; i < sets_a.size(); i++)
+    {
+        if (sets_b[i] > 2*sets_a[i] || sets_a[i] > sets_b[i])
+        {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+
     cout << "YES" << endl;
-    return;
 }
 
 
